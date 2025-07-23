@@ -116,7 +116,7 @@ public void roll(int roll) {
             return true;
          }
       } else {
-         System.out.println("Answer was corrent!!!!");
+         System.out.println("Answer was correct!!!!");
          player.addCoins();
          System.out.println(players.get(currentPlayerIndex).getName()
                             + " now has "
