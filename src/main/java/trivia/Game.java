@@ -9,8 +9,6 @@ public class Game implements IGame {
    List<Player> players = new ArrayList<>();
    int currentPlayerIndex = 0;
 
-   boolean isGettingOutOfPenaltyBox;
-
    LinkedList<String> popQuestions = new LinkedList<>();
    LinkedList<String> scienceQuestions = new LinkedList<>();
    LinkedList<String> sportsQuestions = new LinkedList<>();
@@ -40,28 +38,31 @@ public class Game implements IGame {
       return true;
    }
 
-public void roll(int roll) {
-   Player player = currentPlayer();
-   System.out.println(players.get(currentPlayerIndex).getName() + " is the current player");
-   System.out.println("They have rolled a " + roll);
+   public void roll(int roll) {
+      Player player = currentPlayer();
+      System.out.println(players.get(currentPlayerIndex).getName() + " is the current player");
+      System.out.println("They have rolled a " + roll);
 
-   if (player.isInPenaltyBox()) {
-      if (roll % 2 != 0) {
-         isGettingOutOfPenaltyBox = true;
+      handleJail(player, roll);
+   }
+
+   private void handleJail(Player player, int roll) {
+      if (!player.isInPenaltyBox()) {
+         processTurn(player, roll);
+         return;
+      }
+      if (isOdd(roll)) {
+         player.releaseFromPenaltyBox();
          System.out.println(
              players.get(currentPlayerIndex).getName() + " is getting out of the penalty box");
-         player.move(roll);
-         System.out.println(players.get(currentPlayerIndex).getName()
-             + "'s new location is "
-             + player.getPosition());
-         System.out.println("The category is " + currentCategory());
-         askQuestion();
+         processTurn(player, roll);
       } else {
          System.out.println(player.getName() + " is not getting out of the penalty box");
-         isGettingOutOfPenaltyBox = false;
+         player.keepInPenaltyBox();
       }
+   }
 
-   } else {
+   private void processTurn(Player player, int roll) {
       player.move(roll);
       System.out.println(player.getName()
           + "'s new location is "
@@ -69,7 +70,11 @@ public void roll(int roll) {
       System.out.println("The category is " + currentCategory());
       askQuestion();
    }
-}
+
+   private boolean isOdd(int roll) {
+      return roll % 2 != 0;
+   }
+
 
    private void askQuestion() {
      switch (currentCategory()) {
@@ -98,7 +103,7 @@ public void roll(int roll) {
    public boolean handleCorrectAnswer() {
       Player player = currentPlayer();
       if (player.isInPenaltyBox()) {
-         if (isGettingOutOfPenaltyBox) {
+         if (player.isGettingOutOfPenaltyBox()) {
             System.out.println("Answer was correct!!!!");
             player.addCoins();
             System.out.println(player.getName()

@@ -5,6 +5,7 @@ public class Player {
   private int position = 1;
   private int coins = 0;
   private boolean inPenaltyBox = false;
+  private boolean gettingOutOfPenaltyBox = false;
 
   public Player(String name) {
     this.name = name;
@@ -36,6 +37,18 @@ public class Player {
 
   public void sendToPenaltyBox() {
     inPenaltyBox = true;
+  }
+
+  public void releaseFromPenaltyBox(){
+    this.gettingOutOfPenaltyBox = true;
+  }
+
+  public void keepInPenaltyBox(){
+    this.gettingOutOfPenaltyBox = false;
+  }
+
+  public boolean isGettingOutOfPenaltyBox() {
+    return gettingOutOfPenaltyBox;
   }
 
 }
