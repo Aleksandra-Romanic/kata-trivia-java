@@ -77,13 +77,14 @@ public class Game implements IGame {
 
 
    private void askQuestion() {
-     switch (currentCategory()) {
-       case "Pop" -> System.out.println(popQuestions.removeFirst());
-       case "Science" -> System.out.println(scienceQuestions.removeFirst());
-       case "Sports" -> System.out.println(sportsQuestions.removeFirst());
-       case "Rock" -> System.out.println(rockQuestions.removeFirst());
-       default -> throw new IllegalArgumentException("Unknown category: " + currentCategory());
-     }
+      if (currentCategory().equals("Pop"))
+         System.out.println(popQuestions.removeFirst());
+      if (currentCategory().equals("Science"))
+         System.out.println(scienceQuestions.removeFirst());
+      if (currentCategory().equals("Sports"))
+         System.out.println(sportsQuestions.removeFirst());
+      if (currentCategory().equals("Rock"))
+         System.out.println(rockQuestions.removeFirst());
    }
 
    private String currentCategory() {
@@ -104,13 +105,7 @@ public class Game implements IGame {
       Player player = currentPlayer();
       if (player.isInPenaltyBox()) {
          if (player.isGettingOutOfPenaltyBox()) {
-            System.out.println("Answer was correct!!!!");
-            player.addCoins();
-            System.out.println(player.getName()
-                               + " now has "
-                               + player.getCoins()
-                               + " Gold Coins.");
-
+            correctAnswer();
             boolean winner = didPlayerWin();
             currentPlayerIndex++;
             if (currentPlayerIndex == players.size()) currentPlayerIndex = 0;
@@ -121,18 +116,22 @@ public class Game implements IGame {
             return true;
          }
       } else {
-         System.out.println("Answer was correct!!!!");
-         player.addCoins();
-         System.out.println(players.get(currentPlayerIndex).getName()
-                            + " now has "
-                            + player.getCoins()
-                            + " Gold Coins.");
-
+         correctAnswer();
          boolean winner = didPlayerWin();
          currentPlayerIndex++;
          if (currentPlayerIndex == players.size()) currentPlayerIndex= 0;
          return winner;
       }
+   }
+
+   public void correctAnswer(){
+      Player player = currentPlayer();
+      System.out.println("Answer was correct!!!!");
+      player.addCoins();
+      System.out.println(player.getName()
+          + " now has "
+          + player.getCoins()
+          + " Gold Coins.");
    }
 
    public boolean wrongAnswer() {
