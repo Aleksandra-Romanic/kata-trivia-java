@@ -1,34 +1,29 @@
 package trivia;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 // REFACTOR ME
 public class Game implements IGame {
    List<Player> players = new ArrayList<>();
    int currentPlayerIndex = 0;
 
-   LinkedList<String> popQuestions = new LinkedList<>();
-   LinkedList<String> scienceQuestions = new LinkedList<>();
-   LinkedList<String> sportsQuestions = new LinkedList<>();
-   LinkedList<String> rockQuestions = new LinkedList<>();
+   private final Map<Category, QuestionList> questionsByCategory = new EnumMap<>(Category.class);
 
    public Game() {
-      for (int i = 0; i < 50; i++) {
-         popQuestions.addLast("Pop Question " + i);
-         scienceQuestions.addLast(("Science Question " + i));
-         sportsQuestions.addLast(("Sports Question " + i));
-         rockQuestions.addLast(createRockQuestion(i));
+      for (Category category : Category.values()) {
+         QuestionList list = new QuestionList();
+         for (int i = 0; i < 50; i++) {
+            list.add(category.getDisplayName() + " Question " + i);
+         }
+         questionsByCategory.put(category, list);
       }
    }
 
    private Player currentPlayer() {
       return players.get(currentPlayerIndex);
-   }
-
-   public String createRockQuestion(int index) {
-      return "Rock Question " + index;
    }
 
    public boolean add(String playerName) {
@@ -67,7 +62,7 @@ public class Game implements IGame {
       System.out.println(player.getName()
           + "'s new location is "
           + player.getPosition());
-      System.out.println("The category is " + currentCategory());
+      System.out.println("The category is " + currentCategory().getDisplayName());
       askQuestion();
    }
 
@@ -75,30 +70,15 @@ public class Game implements IGame {
       return roll % 2 != 0;
    }
 
-
    private void askQuestion() {
-      if (currentCategory().equals("Pop"))
-         System.out.println(popQuestions.removeFirst());
-      if (currentCategory().equals("Science"))
-         System.out.println(scienceQuestions.removeFirst());
-      if (currentCategory().equals("Sports"))
-         System.out.println(sportsQuestions.removeFirst());
-      if (currentCategory().equals("Rock"))
-         System.out.println(rockQuestions.removeFirst());
+      Category category = currentCategory();
+      String question = questionsByCategory.get(category).next();
+      System.out.println(question);
    }
 
-   private String currentCategory() {
-      int position = players.get(currentPlayerIndex).getPosition();
-      if (position - 1 == 0) return "Pop";
-      if (position - 1 == 4) return "Pop";
-      if (position - 1  == 8) return "Pop";
-      if (position - 1  == 1) return "Science";
-      if (position - 1 == 5) return "Science";
-      if (position - 1 == 9) return "Science";
-      if (position - 1 == 2) return "Sports";
-      if (position - 1 == 6) return "Sports";
-      if (position - 1 == 10) return "Sports";
-      return "Rock";
+   private Category currentCategory() {
+      int position = currentPlayer().getPosition();
+      return Category.currentCategory(position);
    }
 
    public boolean handleCorrectAnswer() {
@@ -107,19 +87,16 @@ public class Game implements IGame {
          if (player.isGettingOutOfPenaltyBox()) {
             correctAnswer();
             boolean winner = didPlayerWin();
-            currentPlayerIndex++;
-            if (currentPlayerIndex == players.size()) currentPlayerIndex = 0;
+            advanceToNextPlayer();
             return winner;
          } else {
-            currentPlayerIndex++;
-            if (currentPlayerIndex == players.size()) currentPlayerIndex = 0;
+            advanceToNextPlayer();
             return true;
          }
       } else {
          correctAnswer();
          boolean winner = didPlayerWin();
-         currentPlayerIndex++;
-         if (currentPlayerIndex == players.size()) currentPlayerIndex= 0;
+         advanceToNextPlayer();
          return winner;
       }
    }
@@ -132,6 +109,11 @@ public class Game implements IGame {
           + " now has "
           + player.getCoins()
           + " Gold Coins.");
+   }
+
+   private void advanceToNextPlayer() {
+      currentPlayerIndex++;
+      if (currentPlayerIndex == players.size()) currentPlayerIndex= 0;
    }
 
    public boolean wrongAnswer() {
