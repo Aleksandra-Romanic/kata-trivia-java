@@ -13,8 +13,4 @@ public class QuestionList {
   public String next() {
     return questions.removeFirst();
   }
-
-  public boolean isEmpty() {
-    return questions.isEmpty();
-  }
 }

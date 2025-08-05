@@ -1,26 +1,16 @@
 package trivia;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
+
 import java.util.List;
-import java.util.Map;
+
 
 // REFACTOR ME
 public class Game implements IGame {
    List<Player> players = new ArrayList<>();
    int currentPlayerIndex = 0;
 
-   private final Map<Category, QuestionList> questionsByCategory = new EnumMap<>(Category.class);
-
-   public Game() {
-      for (Category category : Category.values()) {
-         QuestionList list = new QuestionList();
-         for (int i = 0; i < 50; i++) {
-            list.add(category.getDisplayName() + " Question " + i);
-         }
-         questionsByCategory.put(category, list);
-      }
-   }
+   private final QuestionManager questionManager = new QuestionManager();
 
    private Player currentPlayer() {
       return players.get(currentPlayerIndex);
@@ -72,7 +62,7 @@ public class Game implements IGame {
 
    private void askQuestion() {
       Category category = currentCategory();
-      String question = questionsByCategory.get(category).next();
+      String question = questionManager.getNextQuestion(category);
       System.out.println(question);
    }
 
