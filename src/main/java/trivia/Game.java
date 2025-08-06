@@ -1,31 +1,18 @@
 package trivia;
 
-import java.util.ArrayList;
-
-import java.util.List;
-
-
 // REFACTOR ME
 public class Game implements IGame {
-   List<Player> players = new ArrayList<>();
-   int currentPlayerIndex = 0;
 
    private final QuestionManager questionManager = new QuestionManager();
-
-   private Player currentPlayer() {
-      return players.get(currentPlayerIndex);
-   }
+   private final PlayerManager playerManager = new PlayerManager();
 
    public boolean add(String playerName) {
-      players.add(new Player(playerName));
-      System.out.println(playerName + " was added");
-      System.out.println("They are player number " + players.size());
-      return true;
+      return playerManager.addPlayer(playerName);
    }
 
    public void roll(int roll) {
-      Player player = currentPlayer();
-      System.out.println(players.get(currentPlayerIndex).getName() + " is the current player");
+      Player player = playerManager.getCurrentPlayer();
+      System.out.println(playerManager.getCurrentPlayer().getName() + " is the current player");
       System.out.println("They have rolled a " + roll);
 
       handleJail(player, roll);
@@ -39,7 +26,7 @@ public class Game implements IGame {
       if (isOdd(roll)) {
          player.releaseFromPenaltyBox();
          System.out.println(
-             players.get(currentPlayerIndex).getName() + " is getting out of the penalty box");
+             playerManager.getCurrentPlayer().getName() + " is getting out of the penalty box");
          processTurn(player, roll);
       } else {
          System.out.println(player.getName() + " is not getting out of the penalty box");
@@ -67,32 +54,32 @@ public class Game implements IGame {
    }
 
    private Category currentCategory() {
-      int position = currentPlayer().getPosition();
+      int position = playerManager.getCurrentPlayer().getPosition();
       return Category.currentCategory(position);
    }
 
    public boolean handleCorrectAnswer() {
-      Player player = currentPlayer();
+      Player player = playerManager.getCurrentPlayer();
       if (player.isInPenaltyBox()) {
          if (player.isGettingOutOfPenaltyBox()) {
             correctAnswer();
             boolean winner = didPlayerWin();
-            advanceToNextPlayer();
+            playerManager.nextPlayer();
             return winner;
          } else {
-            advanceToNextPlayer();
+            playerManager.nextPlayer();
             return true;
          }
       } else {
          correctAnswer();
          boolean winner = didPlayerWin();
-         advanceToNextPlayer();
+         playerManager.nextPlayer();
          return winner;
       }
    }
 
    public void correctAnswer(){
-      Player player = currentPlayer();
+      Player player = playerManager.getCurrentPlayer();
       System.out.println("Answer was correct!!!!");
       player.addCoins();
       System.out.println(player.getName()
@@ -101,22 +88,16 @@ public class Game implements IGame {
           + " Gold Coins.");
    }
 
-   private void advanceToNextPlayer() {
-      currentPlayerIndex++;
-      if (currentPlayerIndex == players.size()) currentPlayerIndex= 0;
-   }
-
    public boolean wrongAnswer() {
       System.out.println("Question was incorrectly answered");
-      System.out.println(players.get(currentPlayerIndex).getName() + " was sent to the penalty box");
-      currentPlayer().sendToPenaltyBox();
+      System.out.println(playerManager.getCurrentPlayer().getName() + " was sent to the penalty box");
+      playerManager.getCurrentPlayer().sendToPenaltyBox();
 
-      currentPlayerIndex++;
-      if (currentPlayerIndex == players.size()) currentPlayerIndex = 0;
+      playerManager.nextPlayer();
       return true;
    }
 
    private boolean didPlayerWin() {
-      return !(currentPlayer().getCoins() == 6);
+      return !playerManager.hasCurrentPlayerWon();
    }
 }

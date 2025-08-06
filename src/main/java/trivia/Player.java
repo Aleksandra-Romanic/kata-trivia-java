@@ -51,6 +51,9 @@ public class Player {
     return gettingOutOfPenaltyBox;
   }
 
+  public boolean hasWon() {
+    return coins == 6;
+  }
 }
 
 
