@@ -3,8 +3,15 @@ package trivia;
 // REFACTOR ME
 public class Game implements IGame {
 
-   private final QuestionManager questionManager = new QuestionManager();
-   private final PlayerManager playerManager = new PlayerManager();
+   private final QuestionManager questionManager;
+   private final PlayerManager playerManager;
+   private final PenaltyBoxHandler penaltyBoxHandler;
+
+   public Game(){
+      this.questionManager = new QuestionManager();
+      this.playerManager = new PlayerManager();
+      this.penaltyBoxHandler = new PenaltyBoxHandler();
+   }
 
    public boolean add(String playerName) {
       return playerManager.addPlayer(playerName);
@@ -14,23 +21,9 @@ public class Game implements IGame {
       Player player = playerManager.getCurrentPlayer();
       System.out.println(playerManager.getCurrentPlayer().getName() + " is the current player");
       System.out.println("They have rolled a " + roll);
-
-      handleJail(player, roll);
-   }
-
-   private void handleJail(Player player, int roll) {
-      if (!player.isInPenaltyBox()) {
+      boolean canPlay = penaltyBoxHandler.handleJail(player, roll);
+      if (canPlay) {
          processTurn(player, roll);
-         return;
-      }
-      if (isOdd(roll)) {
-         player.releaseFromPenaltyBox();
-         System.out.println(
-             playerManager.getCurrentPlayer().getName() + " is getting out of the penalty box");
-         processTurn(player, roll);
-      } else {
-         System.out.println(player.getName() + " is not getting out of the penalty box");
-         player.keepInPenaltyBox();
       }
    }
 
@@ -41,10 +34,6 @@ public class Game implements IGame {
           + player.getPosition());
       System.out.println("The category is " + currentCategory().getDisplayName());
       askQuestion();
-   }
-
-   private boolean isOdd(int roll) {
-      return roll % 2 != 0;
    }
 
    private void askQuestion() {
@@ -92,7 +81,6 @@ public class Game implements IGame {
       System.out.println("Question was incorrectly answered");
       System.out.println(playerManager.getCurrentPlayer().getName() + " was sent to the penalty box");
       playerManager.getCurrentPlayer().sendToPenaltyBox();
-
       playerManager.nextPlayer();
       return true;
    }
