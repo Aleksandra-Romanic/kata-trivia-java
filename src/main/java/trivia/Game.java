@@ -6,12 +6,14 @@ public class Game implements IGame {
   private final PlayerManager playerManager;
   private final PenaltyBoxHandler penaltyBoxHandler;
   private final TurnManager turnManager;
+  private final AnswerHandler answerHandler;
 
   public Game() {
     QuestionManager questionManager = new QuestionManager();
     this.playerManager = new PlayerManager();
     this.penaltyBoxHandler = new PenaltyBoxHandler();
     this.turnManager = new TurnManager(questionManager);
+    this.answerHandler = new AnswerHandler(this.playerManager);
   }
 
   public boolean add(String playerName) {
@@ -28,44 +30,10 @@ public class Game implements IGame {
   }
 
   public boolean handleCorrectAnswer() {
-    Player player = playerManager.getCurrentPlayer();
-    if (player.isInPenaltyBox()) {
-      if (player.isGettingOutOfPenaltyBox()) {
-        correctAnswer();
-        boolean winner = didPlayerWin();
-        playerManager.nextPlayer();
-        return winner;
-      } else {
-        playerManager.nextPlayer();
-        return true;
-      }
-    } else {
-      correctAnswer();
-      boolean winner = didPlayerWin();
-      playerManager.nextPlayer();
-      return winner;
-    }
-  }
-
-  public void correctAnswer() {
-    Player player = playerManager.getCurrentPlayer();
-    System.out.println("Answer was correct!!!!");
-    player.addCoins();
-    System.out.println(player.getName()
-        + " now has "
-        + player.getCoins()
-        + " Gold Coins.");
+    return answerHandler.handleCorrectAnswer();
   }
 
   public boolean wrongAnswer() {
-    System.out.println("Question was incorrectly answered");
-    System.out.println(playerManager.getCurrentPlayer().getName() + " was sent to the penalty box");
-    playerManager.getCurrentPlayer().sendToPenaltyBox();
-    playerManager.nextPlayer();
-    return true;
-  }
-
-  private boolean didPlayerWin() {
-    return !playerManager.hasCurrentPlayerWon();
+    return answerHandler.handleWrongAnswer();
   }
 }
