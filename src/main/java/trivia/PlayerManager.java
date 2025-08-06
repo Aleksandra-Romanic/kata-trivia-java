@@ -21,7 +21,9 @@ public class PlayerManager {
 
   public void nextPlayer() {
     currentPlayerIndex++;
-    if (currentPlayerIndex == players.size()) currentPlayerIndex= 0;
+    if (currentPlayerIndex == players.size()) {
+      currentPlayerIndex = 0;
+    }
   }
 
   public boolean hasCurrentPlayerWon() {

@@ -17,16 +17,15 @@ public enum Category {
   }
 
   public static Category currentCategory(int position) {
-    int index = (position - 1) % 12;
-    if (index == 0) return POP;
-    if (index == 4) return POP;
-    if (index == 8) return POP;
-    if (index == 1) return SCIENCE;
-    if (index == 5) return SCIENCE;
-    if (index == 9) return SCIENCE;
-    if (index == 2) return SPORTS;
-    if (index == 6) return SPORTS;
-    if (index == 10) return SPORTS;
+    if (position - 1 == 0) return POP;
+    if (position - 1 == 4) return POP;
+    if (position - 1 == 8) return POP;
+    if (position - 1 == 1) return SCIENCE;
+    if (position - 1 == 5) return SCIENCE;
+    if (position - 1 == 9) return SCIENCE;
+    if (position - 1 == 2) return SPORTS;
+    if (position - 1 == 6) return SPORTS;
+    if (position - 1 == 10) return SPORTS;
     return ROCK;
   }
 }

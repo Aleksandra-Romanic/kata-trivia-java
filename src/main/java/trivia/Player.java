@@ -1,6 +1,7 @@
 package trivia;
 
 public class Player {
+
   private final String name;
   private int position = 1;
   private int coins = 0;
@@ -39,11 +40,11 @@ public class Player {
     inPenaltyBox = true;
   }
 
-  public void releaseFromPenaltyBox(){
+  public void releaseFromPenaltyBox() {
     this.gettingOutOfPenaltyBox = true;
   }
 
-  public void keepInPenaltyBox(){
+  public void keepInPenaltyBox() {
     this.gettingOutOfPenaltyBox = false;
   }
 
