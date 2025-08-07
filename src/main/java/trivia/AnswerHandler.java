@@ -10,23 +10,15 @@ public class AnswerHandler {
 
   public boolean handleCorrectAnswer() {
     Player player = playerManager.getCurrentPlayer();
-    if (player.isInPenaltyBox()) {
-      if (player.isGettingOutOfPenaltyBox()) {
-        processCorrectAnswer(player);
-        boolean winner = !playerManager.hasCurrentPlayerWon();
-        playerManager.nextPlayer();
-        return winner;
-      } else {
+    if (player.isInPenaltyBox() && !player.isGettingOutOfPenaltyBox()) {
         playerManager.nextPlayer();
         return true;
-      }
-    } else {
+    }
       processCorrectAnswer(player);
-      boolean winner = !playerManager.hasCurrentPlayerWon();
+      boolean winner = playerManager.hasCurrentPlayerWon();
       playerManager.nextPlayer();
       return winner;
     }
-  }
 
   public boolean handleWrongAnswer() {
     Player player = playerManager.getCurrentPlayer();
