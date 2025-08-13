@@ -7,6 +7,9 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Random;
+import trivia.core.game.Game;
+import trivia.core.game.IGame;
+import trivia.legacy.GameOld;
 
 import static org.junit.Assert.assertEquals;
 

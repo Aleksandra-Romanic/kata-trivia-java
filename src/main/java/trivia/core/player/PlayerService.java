@@ -1,9 +1,9 @@
-package trivia;
+package trivia.core.player;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerManager {
+public class PlayerService {
 
   private final List<Player> players = new ArrayList<>();
   private int currentPlayerIndex = 0;

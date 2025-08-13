@@ -1,11 +1,15 @@
-package trivia;
+package trivia.core.game;
 
-public class TurnManager {
+import trivia.core.player.Player;
+import trivia.core.question.Category;
+import trivia.core.question.QuestionService;
 
-  private final QuestionManager questionManager;
+public class TurnService {
 
-  public TurnManager(QuestionManager questionManager) {
-    this.questionManager = questionManager;
+  private final QuestionService questionService;
+
+  public TurnService(QuestionService questionService) {
+    this.questionService = questionService;
   }
 
   public void processTurn(Player player, int roll) {
@@ -15,7 +19,7 @@ public class TurnManager {
     Category category = Category.currentCategory(player.getPosition());
     printCategory(category);
 
-    String question = questionManager.getNextQuestion(category);
+    String question = questionService.getNextQuestion(category);
     printQuestion(question);
   }
 

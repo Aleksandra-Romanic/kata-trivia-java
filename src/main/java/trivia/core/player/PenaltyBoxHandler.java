@@ -1,4 +1,4 @@
-package trivia;
+package trivia.core.player;
 
 public class PenaltyBoxHandler {
 

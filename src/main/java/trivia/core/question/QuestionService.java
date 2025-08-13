@@ -1,13 +1,13 @@
-package trivia;
+package trivia.core.question;
 
 import java.util.EnumMap;
 import java.util.Map;
 
-public class QuestionManager {
+public class QuestionService {
 
   private final Map<Category, QuestionList> questionsByCategory = new EnumMap<>(Category.class);
 
-  public QuestionManager() {
+  public QuestionService() {
     for (Category category : Category.values()) {
       QuestionList list = new QuestionList();
       for (int i = 0; i < 50; i++) {

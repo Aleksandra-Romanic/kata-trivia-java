@@ -1,32 +1,35 @@
-package trivia;
+package trivia.adapter;
+
+import trivia.core.player.Player;
+import trivia.core.player.PlayerService;
 
 public class AnswerHandler {
 
-  private final PlayerManager playerManager;
+  private final PlayerService playerService;
 
-  public AnswerHandler(PlayerManager playerManager) {
-    this.playerManager = playerManager;
+  public AnswerHandler(PlayerService playerService) {
+    this.playerService = playerService;
   }
 
   public boolean handleCorrectAnswer() {
-    Player player = playerManager.getCurrentPlayer();
+    Player player = playerService.getCurrentPlayer();
 
     if (player.isInPenaltyBox() && !player.isGettingOutOfPenaltyBox()) {
-        playerManager.nextPlayer();
+        playerService.nextPlayer();
         return true;
     }
 
       processCorrectAnswer(player);
-      boolean playerWon = playerManager.hasCurrentPlayerWon();
-      playerManager.nextPlayer();
+      boolean playerWon = playerService.hasCurrentPlayerWon();
+      playerService.nextPlayer();
       return !playerWon;
     }
 
   public boolean handleWrongAnswer() {
-    Player player = playerManager.getCurrentPlayer();
+    Player player = playerService.getCurrentPlayer();
     System.out.println("Question was incorrectly answered");
     player.penalize();
-    playerManager.nextPlayer();
+    playerService.nextPlayer();
     return true;
   }
 

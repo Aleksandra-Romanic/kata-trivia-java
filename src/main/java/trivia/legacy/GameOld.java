@@ -1,7 +1,8 @@
-package trivia;
+package trivia.legacy;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import trivia.core.game.IGame;
 
 
 // TODO refactor me

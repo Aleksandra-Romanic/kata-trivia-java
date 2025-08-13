@@ -1,10 +1,12 @@
-package trivia;
+package trivia.core.player;
 
 public class Player {
 
   private final String name;
   private int position = 1;
   private int coins = 0;
+  private static final int BOARD_SIZE = 12;
+  private static final int WINNING_COINS = 6;
   private boolean inPenaltyBox = false;
   private boolean gettingOutOfPenaltyBox = false;
 
@@ -13,7 +15,7 @@ public class Player {
   }
 
   public void move(int roll) {
-    position = ((position - 1 + roll) % 12) + 1;
+    position = ((position - 1 + roll) % BOARD_SIZE) + 1;
   }
 
   public void addCoins() {
@@ -53,7 +55,7 @@ public class Player {
   }
 
   public boolean hasWon() {
-    return coins == 6;
+    return coins == WINNING_COINS;
   }
 
   public void penalize() {

@@ -1,36 +1,42 @@
-package trivia;
+package trivia.core.game;
+
+import trivia.adapter.AnswerHandler;
+import trivia.core.player.PenaltyBoxHandler;
+import trivia.core.player.Player;
+import trivia.core.player.PlayerService;
+import trivia.core.question.QuestionService;
 
 // REFACTOR ME
 public class Game implements IGame {
 
-  private final PlayerManager playerManager;
+  private final PlayerService playerService;
   private final PenaltyBoxHandler penaltyBoxHandler;
-  private final TurnManager turnManager;
+  private final TurnService turnService;
   private final AnswerHandler answerHandler;
 
   public Game() {
-    QuestionManager questionManager = new QuestionManager();
-    this.playerManager = new PlayerManager();
+    QuestionService questionService = new QuestionService();
+    this.playerService = new PlayerService();
     this.penaltyBoxHandler = new PenaltyBoxHandler();
-    this.turnManager = new TurnManager(questionManager);
-    this.answerHandler = new AnswerHandler(this.playerManager);
+    this.turnService = new TurnService(questionService);
+    this.answerHandler = new AnswerHandler(this.playerService);
   }
 
   @Override
   public boolean add(String playerName) {
-    return playerManager.addPlayer(playerName);
+    return playerService.addPlayer(playerName);
   }
 
   @Override
   public void roll(int roll) {
-    Player player = playerManager.getCurrentPlayer();
+    Player player = playerService.getCurrentPlayer();
 
     System.out.println(player.getName() + " is the current player");
     System.out.println("They have rolled a " + roll);
 
     boolean getsOut = penaltyBoxHandler.handleJail(player, roll);
     if (getsOut) {
-      turnManager.processTurn(player, roll);
+      turnService.processTurn(player, roll);
     }
   }
 
