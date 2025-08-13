@@ -17,15 +17,13 @@ public enum Category {
   }
 
   public static Category currentCategory(int position) {
-    if (position - 1 == 0) return POP;
-    if (position - 1 == 4) return POP;
-    if (position - 1 == 8) return POP;
-    if (position - 1 == 1) return SCIENCE;
-    if (position - 1 == 5) return SCIENCE;
-    if (position - 1 == 9) return SCIENCE;
-    if (position - 1 == 2) return SPORTS;
-    if (position - 1 == 6) return SPORTS;
-    if (position - 1 == 10) return SPORTS;
-    return ROCK;
+    int index = (position - 1) % 4;
+    return switch (index) {
+      case 0 -> POP;
+      case 1 -> SCIENCE;
+      case 2 -> SPORTS;
+      default -> ROCK;
+    };
   }
+
 }

@@ -10,21 +10,22 @@ public class AnswerHandler {
 
   public boolean handleCorrectAnswer() {
     Player player = playerManager.getCurrentPlayer();
+
     if (player.isInPenaltyBox() && !player.isGettingOutOfPenaltyBox()) {
         playerManager.nextPlayer();
         return true;
     }
+
       processCorrectAnswer(player);
-      boolean winner = playerManager.hasCurrentPlayerWon();
+      boolean playerWon = playerManager.hasCurrentPlayerWon();
       playerManager.nextPlayer();
-      return winner;
+      return !playerWon;
     }
 
   public boolean handleWrongAnswer() {
     Player player = playerManager.getCurrentPlayer();
     System.out.println("Question was incorrectly answered");
-    System.out.println(player.getName() + " was sent to the penalty box");
-    player.sendToPenaltyBox();
+    player.penalize();
     playerManager.nextPlayer();
     return true;
   }

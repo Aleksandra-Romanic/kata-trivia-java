@@ -55,6 +55,11 @@ public class Player {
   public boolean hasWon() {
     return coins == 6;
   }
+
+  public void penalize() {
+    System.out.println(getName() + " was sent to the penalty box");
+    sendToPenaltyBox();
+  }
 }
 
 

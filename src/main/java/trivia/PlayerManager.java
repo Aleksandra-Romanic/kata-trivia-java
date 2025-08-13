@@ -27,6 +27,6 @@ public class PlayerManager {
   }
 
   public boolean hasCurrentPlayerWon() {
-    return !getCurrentPlayer().hasWon();
+    return getCurrentPlayer().hasWon();
   }
 }

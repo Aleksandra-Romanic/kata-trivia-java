@@ -16,23 +16,30 @@ public class Game implements IGame {
     this.answerHandler = new AnswerHandler(this.playerManager);
   }
 
+  @Override
   public boolean add(String playerName) {
     return playerManager.addPlayer(playerName);
   }
 
+  @Override
   public void roll(int roll) {
     Player player = playerManager.getCurrentPlayer();
-    System.out.println(playerManager.getCurrentPlayer().getName() + " is the current player");
+
+    System.out.println(player.getName() + " is the current player");
     System.out.println("They have rolled a " + roll);
-     if (penaltyBoxHandler.handleJail(player, roll)) {
-        turnManager.processTurn(player, roll);
-     }
+
+    boolean getsOut = penaltyBoxHandler.handleJail(player, roll);
+    if (getsOut) {
+      turnManager.processTurn(player, roll);
+    }
   }
 
+  @Override
   public boolean handleCorrectAnswer() {
     return answerHandler.handleCorrectAnswer();
   }
 
+  @Override
   public boolean wrongAnswer() {
     return answerHandler.handleWrongAnswer();
   }
