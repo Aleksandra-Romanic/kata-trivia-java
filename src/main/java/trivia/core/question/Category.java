@@ -16,14 +16,4 @@ public enum Category {
     return displayName;
   }
 
-  public static Category currentCategory(int position) {
-    int index = (position - 1) % 4;
-    return switch (index) {
-      case 0 -> POP;
-      case 1 -> SCIENCE;
-      case 2 -> SPORTS;
-      default -> ROCK;
-    };
-  }
-
 }

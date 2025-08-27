@@ -14,13 +14,14 @@ public class Game implements IGame {
   private final PenaltyBox penaltyBox;
   private final TurnService turnService;
   private final AnswerHandler answerHandler;
-  
+
 
   public Game() {
     QuestionService questionService = new QuestionService();
+    Board board = new Board();
     this.players = new PlayerService();
     this.penaltyBox = new PenaltyBox();
-    this.turnService = new TurnService(questionService);
+    this.turnService = new TurnService(questionService, board);
     this.answerHandler = new AnswerHandler(this.players, this.penaltyBox);
   }
 

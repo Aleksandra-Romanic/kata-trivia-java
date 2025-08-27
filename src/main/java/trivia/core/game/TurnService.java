@@ -7,16 +7,19 @@ import trivia.core.question.QuestionService;
 public class TurnService {
 
   private final QuestionService questionService;
+  private final Board board;
 
-  public TurnService(QuestionService questionService) {
+  public TurnService(QuestionService questionService, Board board) {
     this.questionService = questionService;
+    this.board = board;
   }
 
   public void processTurn(Player player, int roll) {
-    player.move(roll);
+    int newPosition = board.nextPosition(player.getPosition(), roll);
+    player.setPosition(newPosition);
     printPlayerLocation(player);
 
-    Category category = Category.currentCategory(player.getPosition());
+    Category category = board.getCategoryInPlace(newPosition);
     printCategory(category);
 
     String question = questionService.getNextQuestion(category);
