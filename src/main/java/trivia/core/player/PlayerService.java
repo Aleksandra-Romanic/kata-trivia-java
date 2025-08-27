@@ -8,11 +8,8 @@ public class PlayerService {
   private final List<Player> players = new ArrayList<>();
   private int currentPlayerIndex = 0;
 
-  public boolean addPlayer(String playerName) {
+  public void addPlayer(String playerName) {
     players.add(new Player(playerName));
-    System.out.println(playerName + " was added");
-    System.out.println("They are player number " + players.size());
-    return true;
   }
 
   public Player getCurrentPlayer() {
@@ -26,7 +23,7 @@ public class PlayerService {
     }
   }
 
-  public boolean hasCurrentPlayerWon() {
-    return getCurrentPlayer().hasWon();
+  public int count() {
+    return players.size();
   }
 }

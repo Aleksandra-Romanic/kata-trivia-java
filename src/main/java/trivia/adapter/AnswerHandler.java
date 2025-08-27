@@ -1,34 +1,34 @@
 package trivia.adapter;
 
+import trivia.core.player.PenaltyBox;
 import trivia.core.player.Player;
 import trivia.core.player.PlayerService;
 
 public class AnswerHandler {
 
   private final PlayerService playerService;
+  private final PenaltyBox penaltyBox;
 
-  public AnswerHandler(PlayerService playerService) {
+  public AnswerHandler(PlayerService playerService, PenaltyBox penaltyBox) {
     this.playerService = playerService;
+    this.penaltyBox = penaltyBox;
   }
 
-  public boolean handleCorrectAnswer() {
+  public void handleCorrectAnswer() {
     Player player = playerService.getCurrentPlayer();
 
-    if (player.isInPenaltyBox() && !player.isGettingOutOfPenaltyBox()) {
-        playerService.nextPlayer();
-        return true;
-    }
-
-      processCorrectAnswer(player);
-      boolean playerWon = playerService.hasCurrentPlayerWon();
+    if (penaltyBox.hasImprisoned(player)) {
       playerService.nextPlayer();
-      return !playerWon;
+      return;
     }
+    processCorrectAnswer(player);
+    playerService.nextPlayer();
+  }
 
   public boolean handleWrongAnswer() {
     Player player = playerService.getCurrentPlayer();
     System.out.println("Question was incorrectly answered");
-    player.penalize();
+    penaltyBox.imprison(player);
     playerService.nextPlayer();
     return true;
   }

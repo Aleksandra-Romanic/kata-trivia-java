@@ -1,7 +1,7 @@
 package trivia.core.game;
 
 import trivia.adapter.AnswerHandler;
-import trivia.core.player.PenaltyBoxHandler;
+import trivia.core.player.PenaltyBox;
 import trivia.core.player.Player;
 import trivia.core.player.PlayerService;
 import trivia.core.question.QuestionService;
@@ -9,44 +9,57 @@ import trivia.core.question.QuestionService;
 // REFACTOR ME
 public class Game implements IGame {
 
-  private final PlayerService playerService;
-  private final PenaltyBoxHandler penaltyBoxHandler;
+  private static final int WINNING_COINS = 6;
+  private final PlayerService players;
+  private final PenaltyBox penaltyBox;
   private final TurnService turnService;
   private final AnswerHandler answerHandler;
+  
 
   public Game() {
     QuestionService questionService = new QuestionService();
-    this.playerService = new PlayerService();
-    this.penaltyBoxHandler = new PenaltyBoxHandler();
+    this.players = new PlayerService();
+    this.penaltyBox = new PenaltyBox();
     this.turnService = new TurnService(questionService);
-    this.answerHandler = new AnswerHandler(this.playerService);
+    this.answerHandler = new AnswerHandler(this.players, this.penaltyBox);
   }
 
   @Override
   public boolean add(String playerName) {
-    return playerService.addPlayer(playerName);
+    players.addPlayer(playerName);
+    System.out.println(playerName + " was added");
+    System.out.println("They are player number " + players.count());
+
+    return true;
   }
 
   @Override
   public void roll(int roll) {
-    Player player = playerService.getCurrentPlayer();
-
+    Player player = players.getCurrentPlayer();
     System.out.println(player.getName() + " is the current player");
     System.out.println("They have rolled a " + roll);
 
-    boolean getsOut = penaltyBoxHandler.handleJail(player, roll);
-    if (getsOut) {
+    if (penaltyBox.hasImprisoned(player)) {
+      penaltyBox.tryToGetOut(player, roll);
+    }
+    if (!penaltyBox.hasImprisoned(player)) {
       turnService.processTurn(player, roll);
     }
   }
 
   @Override
   public boolean handleCorrectAnswer() {
-    return answerHandler.handleCorrectAnswer();
+    Player player = players.getCurrentPlayer();
+    answerHandler.handleCorrectAnswer();
+    return !hasCurrentPlayerWon(player);
   }
 
   @Override
   public boolean wrongAnswer() {
     return answerHandler.handleWrongAnswer();
+  }
+
+  private boolean hasCurrentPlayerWon(Player player) {
+    return player.getCoins() == WINNING_COINS;
   }
 }
