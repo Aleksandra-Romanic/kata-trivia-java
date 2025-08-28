@@ -1,6 +1,5 @@
 package trivia.core.game;
 
-import trivia.adapter.AnswerHandler;
 import trivia.core.player.PenaltyBox;
 import trivia.core.player.Player;
 import trivia.core.player.PlayerService;
@@ -15,16 +14,13 @@ public class Game implements IGame {
   private final PlayerService players;
   private final PenaltyBox penaltyBox;
   private final Board board;
-  private final AnswerHandler answerHandler;
   private final QuestionDeck questionDeck;
-
-
+  
   public Game() {
     this.questionDeck = new QuestionDeck(NUM_OF_QUESTIONS);
     this.players = new PlayerService();
     this.penaltyBox = new PenaltyBox();
     this.board = new Board();
-    this.answerHandler = new AnswerHandler(this.players, this.penaltyBox);
   }
 
   @Override
@@ -50,7 +46,7 @@ public class Game implements IGame {
     }
   }
 
-  private void displayQuestion(Player player){
+  private void displayQuestion(Player player) {
     Category category = board.getCategoryInPlace(player.getPosition());
     System.out.println("The category is " + category.getDisplayName());
     String question = questionDeck.drawQuestion(category);
@@ -60,13 +56,30 @@ public class Game implements IGame {
   @Override
   public boolean handleCorrectAnswer() {
     Player player = players.getCurrentPlayer();
-    answerHandler.handleCorrectAnswer();
+
+    if (penaltyBox.hasImprisoned(player)) {
+      players.nextPlayer();
+      return true;
+    }
+
+    System.out.println("Answer was correct!!!!");
+    player.addCoins();
+    System.out.println(player.getName()
+        + " now has "
+        + player.getCoins()
+        + " Gold Coins.");
+
+    players.nextPlayer();
     return !hasCurrentPlayerWon(player);
   }
 
   @Override
   public boolean wrongAnswer() {
-    return answerHandler.handleWrongAnswer();
+    Player player = players.getCurrentPlayer();
+    System.out.println("Question was incorrectly answered");
+    penaltyBox.imprison(player);
+    players.nextPlayer();
+    return true;
   }
 
   private boolean hasCurrentPlayerWon(Player player) {
