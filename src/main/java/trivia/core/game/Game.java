@@ -4,6 +4,7 @@ import trivia.adapter.AnswerHandler;
 import trivia.core.player.PenaltyBox;
 import trivia.core.player.Player;
 import trivia.core.player.PlayerService;
+import trivia.core.question.Category;
 import trivia.core.question.QuestionService;
 
 // REFACTOR ME
@@ -12,16 +13,16 @@ public class Game implements IGame {
   private static final int WINNING_COINS = 6;
   private final PlayerService players;
   private final PenaltyBox penaltyBox;
-  private final TurnService turnService;
+  private final Board board;
   private final AnswerHandler answerHandler;
+  private final QuestionService questionService;
 
 
   public Game() {
-    QuestionService questionService = new QuestionService();
-    Board board = new Board();
+    this.questionService = new QuestionService();
     this.players = new PlayerService();
     this.penaltyBox = new PenaltyBox();
-    this.turnService = new TurnService(questionService, board);
+    this.board = new Board();
     this.answerHandler = new AnswerHandler(this.players, this.penaltyBox);
   }
 
@@ -44,8 +45,16 @@ public class Game implements IGame {
       penaltyBox.tryToGetOut(player, roll);
     }
     if (!penaltyBox.hasImprisoned(player)) {
-      turnService.processTurn(player, roll);
+      player.move(board, roll);
+      displayQuestion(player);
     }
+  }
+
+  private void displayQuestion(Player player){
+    Category category = board.getCategoryInPlace(player.getPosition());
+    System.out.println("The category is " + category.getDisplayName());
+    String question = questionService.getNextQuestion(category);
+    System.out.println(question);
   }
 
   @Override

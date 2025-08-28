@@ -1,5 +1,7 @@
 package trivia.core.player;
 
+import trivia.core.game.Board;
+
 public class Player {
 
   private final String name;
@@ -10,8 +12,10 @@ public class Player {
     this.name = name;
   }
 
-  public void setPosition(int position) {
-    this.position = position;
+  public void move(Board board, int roll) {
+    int newPosition = board.nextPosition(this.position, roll);
+    this.position = newPosition;
+    System.out.println(name + "'s new location is " + newPosition);
   }
 
   public void addCoins() {
