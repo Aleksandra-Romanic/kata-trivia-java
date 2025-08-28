@@ -5,21 +5,22 @@ import trivia.core.player.PenaltyBox;
 import trivia.core.player.Player;
 import trivia.core.player.PlayerService;
 import trivia.core.question.Category;
-import trivia.core.question.QuestionService;
+import trivia.core.question.QuestionDeck;
 
 // REFACTOR ME
 public class Game implements IGame {
 
   private static final int WINNING_COINS = 6;
+  private static final int NUM_OF_QUESTIONS = 50;
   private final PlayerService players;
   private final PenaltyBox penaltyBox;
   private final Board board;
   private final AnswerHandler answerHandler;
-  private final QuestionService questionService;
+  private final QuestionDeck questionDeck;
 
 
   public Game() {
-    this.questionService = new QuestionService();
+    this.questionDeck = new QuestionDeck(NUM_OF_QUESTIONS);
     this.players = new PlayerService();
     this.penaltyBox = new PenaltyBox();
     this.board = new Board();
@@ -31,7 +32,6 @@ public class Game implements IGame {
     players.addPlayer(playerName);
     System.out.println(playerName + " was added");
     System.out.println("They are player number " + players.count());
-
     return true;
   }
 
@@ -53,7 +53,7 @@ public class Game implements IGame {
   private void displayQuestion(Player player){
     Category category = board.getCategoryInPlace(player.getPosition());
     System.out.println("The category is " + category.getDisplayName());
-    String question = questionService.getNextQuestion(category);
+    String question = questionDeck.drawQuestion(category);
     System.out.println(question);
   }
 

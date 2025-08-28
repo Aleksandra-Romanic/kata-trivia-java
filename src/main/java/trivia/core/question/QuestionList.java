@@ -6,11 +6,13 @@ public class QuestionList {
 
   private final LinkedList<String> questions = new LinkedList<>();
 
-  public void add(String question) {
-    questions.add(question);
+  public QuestionList(Category category, int numberOfQuestions) {
+    for (int i = 0; i < numberOfQuestions; i++) {
+      questions.add(category.getDisplayName() + " Question " + i);
+    }
   }
 
-  public String next() {
+  public String draw() {
     return questions.removeFirst();
   }
 }
