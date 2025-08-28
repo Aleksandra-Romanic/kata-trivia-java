@@ -1,4 +1,4 @@
-package trivia;
+package trivia.core.game;
 
 public interface IGame {
 

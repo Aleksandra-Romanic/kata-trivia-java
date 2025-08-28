@@ -2,6 +2,8 @@ package trivia;
 
 import java.util.Random;
 import java.util.Scanner;
+import trivia.core.game.IGame;
+import trivia.legacy.GameOld;
 
 // DON'T TOUCH THIS CLASS. DON'T REFACTOR THIS CLASS.
 // ONLY RUN IT TO MANUALLY PLAY THE GAME YOURSELF TO UNDERSTAND THE PROBLEM

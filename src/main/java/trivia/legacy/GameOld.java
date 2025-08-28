@@ -1,7 +1,8 @@
-package trivia;
+package trivia.legacy;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import trivia.core.game.IGame;
 
 
 // TODO refactor me
@@ -117,6 +118,7 @@ public class GameOld implements IGame {
          if (isGettingOutOfPenaltyBox) {
             System.out.println("Answer was correct!!!!");
             purses[currentPlayer]++;
+            inPenaltyBox[currentPlayer] = false;
             System.out.println(players.get(currentPlayer)
                                + " now has "
                                + purses[currentPlayer]
@@ -135,7 +137,7 @@ public class GameOld implements IGame {
 
       } else {
 
-         System.out.println("Answer was corrent!!!!");
+         System.out.println("Answer was correct!!!!");
          purses[currentPlayer]++;
          System.out.println(players.get(currentPlayer)
                             + " now has "
